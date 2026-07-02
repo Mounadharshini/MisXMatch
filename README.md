@@ -1,6 +1,6 @@
 # 🚨 MisXMatch – AI Powered Missing Person Identification & Tracking System
 
-![React](https://img.shields.io/badge/React-19-blue?logo=react)
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
 ![Vite](https://img.shields.io/badge/Vite-Frontend-purple?logo=vite)
 ![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-Styled-38B2AC?logo=tailwind-css)
 ![License](https://img.shields.io/badge/License-MIT-green)
