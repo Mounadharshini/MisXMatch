@@ -1,0 +1,36 @@
+{
+  "name": "misxmatch",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "axios": "^1.18.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
+    "leaflet": "^1.9.4",
+    "lottie-react": "^2.4.0",
+    "lucide-react": "^0.575.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-dropzone": "^14.2.10",
+    "react-hook-form": "^7.80.0",
+    "react-icons": "^5.4.0",
+    "react-leaflet": "^4.2.1",
+    "react-router-dom": "^6.28.0",
+    "react-webcam": "^7.2.0",
+    "recharts": "^2.15.4",
+    "tailwindcss": "^4.2.1",
+    "@tailwindcss/vite": "^4.2.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.2.0",
+    "vite": "^8.0.16"
+  }
+}

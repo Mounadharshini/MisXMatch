@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+/* Make Tailwind's `dark:` variant respond to the app's manual .dark class
+   toggle (ThemeContext) instead of only the OS prefers-color-scheme media
+   query. Without this, dark: utilities silently no-op whenever the OS isn't
+   already in dark mode, which is why text disappeared against dark
+   backgrounds after switching the in-app theme toggle. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-navy-50: #f3f4fc;
+  --color-navy-100: #e2e4f8;
+  --color-navy-200: #c1c6ef;
+  --color-navy-300: #9aa2e2;
+  --color-navy-400: #6f79d1;
+  --color-navy-500: #4b56b8;
+  --color-navy-600: #3a4396;
+  --color-navy-700: #2c3270;
+  --color-navy-800: #202451;
+  --color-navy-900: #131530;
+  --color-teal-400: #34d399;
+  --color-teal-500: #10b981;
+  --color-teal-600: #059669;
+  --color-gold-400: #ffd166;
+  --color-gold-500: #f5a623;
+  --color-gold-600: #d3860a;
+  --color-danger: #e11d48;
+  --color-warn: #f59e0b;
+  --color-ok: #10b981;
+  --font-display: "Outfit", ui-sans-serif, system-ui;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+:root {
+  --bg: #f5f6fb;
+  --bg-accent-1: rgba(75, 86, 184, .07);
+  --bg-accent-2: rgba(16, 185, 129, .08);
+  --surface: #ffffff;
+  --surface-2: #f9fafc;
+  --text: #10182b;
+  --muted: #626e85;
+  --border: rgba(24, 27, 74, 0.09);
+  --glass: rgba(255,255,255,0.7);
+  --glass-strong: rgba(255,255,255,0.88);
+  --ring: rgba(75, 86, 184, 0.35);
+  --shadow-glow: 0 20px 50px -22px rgba(16,24,43,.18);
+}
+
+.dark {
+  --bg: #14182f;
+  --bg-accent-1: rgba(111, 121, 209, .12);
+  --bg-accent-2: rgba(52, 211, 153, .09);
+  --surface: #1c2140;
+  --surface-2: #232a4c;
+  --text: #f1f2fd;
+  --muted: #aeb3d4;
+  --border: rgba(255,255,255,0.09);
+  --glass: rgba(28, 33, 64, 0.6);
+  --glass-strong: rgba(28, 33, 64, 0.88);
+  --ring: rgba(154, 162, 226, 0.5);
+  --shadow-glow: 0 25px 70px -28px rgba(0,0,0,.55);
+}
+
+html, body, #root { height: 100%; }
+body {
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(900px 480px at 8% -8%, var(--bg-accent-1), transparent 55%),
+    radial-gradient(800px 460px at 96% 6%, var(--bg-accent-2), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-size: 15.5px;
+  line-height: 1.55;
+}
+/* Small tracked-out uppercase eyebrow/label text (StatCard labels, section
+   eyebrows, nav sub-labels, etc.) used the default 1.55 body line-height,
+   which made two-line wraps on narrow cards look loose and cramped at once.
+   Tighten it — this only affects wrapped multi-line labels since single-line
+   text is unaffected by line-height. */
+.uppercase { line-height: 1.4; }
+
+h1,h2,h3,h4,h5 { font-family: var(--font-display); letter-spacing: -0.01em; line-height: 1.15; }
+/* Distinct weights per level instead of a flat 700 everywhere — gives the
+   scale real hierarchy instead of "everything is bold". */
+h1 { font-size: clamp(1.7rem, 1.35rem + 1.5vw, 2.5rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.3rem, 1.15rem + .85vw, 1.85rem); font-weight: 700; }
+h3 { font-size: clamp(1.1rem, 1.02rem + .4vw, 1.35rem); font-weight: 600; }
+h4 { font-size: clamp(1rem, .95rem + .2vw, 1.1rem); font-weight: 600; letter-spacing: -0.005em; }
+h5 { font-size: .95rem; font-weight: 600; }
+p { line-height: 1.65; }
+
+.bg-app { background: var(--bg); }
+.bg-surface { background: var(--surface); }
+.text-app { color: var(--text); }
+.text-muted { color: var(--muted); }
+.border-app { border-color: var(--border); }
+
+.gradient-hero {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(111,121,209,.32), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(52,211,153,.28), transparent 60%),
+    linear-gradient(180deg, #202451 0%, #2c3270 55%, #3a4396 100%);
+}
+.gradient-safety {
+  background: linear-gradient(150deg, #202451 0%, #2c3270 45%, #3a4396 100%);
+}
+.gradient-gold {
+  background: linear-gradient(135deg, #ffd166 0%, #f5a623 100%);
+}
+.gradient-aurora {
+  background:
+    radial-gradient(700px 320px at 0% -20%, rgba(255,209,102,.20), transparent 60%),
+    radial-gradient(700px 380px at 100% 0%, rgba(52,211,153,.30), transparent 60%),
+    linear-gradient(135deg, #2c3270 0%, #3a4396 60%, #0f7a5c 130%);
+}
+/* AI Features: deep indigo/violet "systems" gradient, paired with the neural
+   node-graph overlay drawn in the page itself. */
+.gradient-neural {
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(129,140,248,.35), transparent 60%),
+    radial-gradient(700px 420px at 5% 110%, rgba(56,189,248,.22), transparent 55%),
+    linear-gradient(150deg, #12143a 0%, #201b52 45%, #2c2470 75%, #1c2560 100%);
+}
+/* How It Works: a calmer teal/emerald gradient to suggest forward motion
+   through a process, distinct from the AI and legal pages. */
+.gradient-process {
+  background:
+    radial-gradient(800px 420px at 90% -10%, rgba(52,211,153,.28), transparent 60%),
+    linear-gradient(140deg, #123326 0%, #14543f 50%, #0f7a5c 100%);
+}
+/* Success Stories: warm amber/rose tone for a celebratory, human feel. */
+.gradient-warm {
+  background:
+    radial-gradient(800px 420px at 10% -10%, rgba(255,209,102,.32), transparent 60%),
+    linear-gradient(140deg, #3a2410 0%, #5c3213 45%, #7a3a1f 75%, #5c2a2a 100%);
+}
+/* Statistics: cool slate/blue "data" gradient. */
+.gradient-data {
+  background:
+    radial-gradient(800px 420px at 95% 0%, rgba(96,165,250,.25), transparent 55%),
+    linear-gradient(150deg, #10182b 0%, #1c2846 50%, #202451 100%);
+}
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-glow);
+}
+.glass-strong {
+  background: var(--glass-strong);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--border);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.1rem;
+  box-shadow: var(--shadow-glow);
+}
+
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  padding:.65rem 1.15rem; border-radius:.75rem; font-weight:600; font-size:.875rem;
+  transition: all .2s ease; border:1px solid transparent; cursor:pointer;
+  font-family: var(--font-sans); letter-spacing: -0.005em;
+}
+.btn-primary { background: linear-gradient(135deg,#3a4396,#10b981); color:#fff; box-shadow: 0 8px 24px -8px rgba(58,67,150,.55); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 32px -8px rgba(58,67,150,.65); }
+.btn-gold { background: linear-gradient(135deg,#ffd166,#f5a623); color:#3a2500; }
+.btn-gold:hover { transform: translateY(-1px); }
+.btn-outline { border-color: var(--border); background: transparent; color: var(--text); }
+.btn-outline:hover { background: var(--glass); }
+.btn-danger { background: #e11d48; color:#fff; }
+.btn-ghost { background: transparent; color: var(--text); }
+.btn-ghost:hover { background: var(--glass); }
+
+.input, .select, .textarea {
+  width:100%; padding:.65rem .85rem; border-radius:.7rem;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+  transition: border-color .15s, box-shadow .15s;
+  font-size: .9rem; font-family: var(--font-sans);
+}
+.input:focus, .select:focus, .textarea:focus { outline:none; border-color: transparent; box-shadow: 0 0 0 3px var(--ring); }
+label.field-label { font-size:.72rem; font-weight:700; color: var(--muted); margin-bottom:.4rem; display:block; text-transform: uppercase; letter-spacing:.08em; }
+
+.badge { display:inline-flex; align-items:center; gap:.3rem; padding:.22rem .6rem; border-radius:999px; font-size:.7rem; font-weight:700; letter-spacing:.01em; }
+.badge-critical { background: rgba(225,29,72,.12); color:#e11d48; }
+.badge-high { background: rgba(245,158,11,.15); color:#b45309; }
+.badge-medium { background: rgba(75,86,184,.14); color:#3a4396; }
+.badge-low { background: rgba(107,114,128,.15); color:#4b5563; }
+.badge-ok { background: rgba(16,185,129,.14); color:#059669; }
+.dark .badge-critical { color:#fb7185; }
+.dark .badge-high { color:#fbbf24; }
+.dark .badge-medium { color:#9aa2e2; }
+.dark .badge-low { color:#c3cadb; }
+.dark .badge-ok { color:#5eead4; }
+
+.chip { padding:.28rem .65rem; border-radius:999px; font-size:.7rem; font-weight:600; border:1px solid var(--border); background: var(--glass); }
+
+/* Toggle switch used across Settings pages */
+.switch { position:relative; display:inline-flex; width:2.75rem; height:1.6rem; flex-shrink:0; border-radius:999px; background:var(--border); border:1px solid var(--border); cursor:pointer; transition: background .2s ease; }
+.switch[data-on="true"] { background: linear-gradient(135deg,#3a4396,#10b981); border-color: transparent; }
+.switch .switch-dot { position:absolute; top:2px; left:2px; width:1.25rem; height:1.25rem; border-radius:999px; background:#fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); transition: transform .2s ease; }
+.switch[data-on="true"] .switch-dot { transform: translateX(1.15rem); }
+
+.scrollbar-thin::-webkit-scrollbar { width:6px; height:6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+
+.section { padding: 5rem 0; }
+.container-x { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+/* Safety net: several accent-text spots use text-navy-500/600/700 without an
+   explicit dark: pair. Those colors are far too dark against the dark-mode
+   surface, so lighten them automatically whenever dark mode is active. */
+.dark .text-navy-500,
+.dark .text-navy-600,
+.dark .text-navy-700 { color: var(--color-navy-300); }
+
+.grid-noise {
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@keyframes node-pulse {
+  0%, 100% { opacity: .35; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+.neural-node { animation: node-pulse 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
