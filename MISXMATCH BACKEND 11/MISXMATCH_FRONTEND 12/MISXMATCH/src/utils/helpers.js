@@ -70,3 +70,28 @@ export function compressImageFile(file, maxDim = 500, quality = 0.75) {
     reader.readAsDataURL(file);
   });
 }
+
+/**
+ * Universal file URL normalizer ensuring all media and evidence links route through 
+ * the gateway /api/cases/files/ path without hardcoded localhosts.
+ */
+export function getFileUrl(url) {
+  if (!url) return "";
+  const trimmed = String(url).trim();
+  if (trimmed.includes("/cases/files/")) {
+    const idx = trimmed.indexOf("/cases/files/");
+    return "/api" + trimmed.substring(idx);
+  }
+  if (trimmed.includes("/files/")) {
+    const sub = trimmed.substring(trimmed.indexOf("/files/") + 7);
+    return `/api/cases/files/${sub}`;
+  }
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  if (trimmed.startsWith("/")) {
+    return trimmed;
+  }
+  return `/api/cases/files/${trimmed}`;
+}
+

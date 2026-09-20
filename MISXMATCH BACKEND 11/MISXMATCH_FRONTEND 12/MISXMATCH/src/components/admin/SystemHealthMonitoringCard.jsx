@@ -28,13 +28,14 @@ export default function SystemHealthMonitoringCard() {
         overallStatus: "UP",
         timestamp: new Date().toISOString(),
         services: {
-          apiGateway: { status: "UP", name: "API Gateway", endpoint: "http://localhost:8080" },
+          apiGateway: { status: "UP", name: "API Gateway", endpoint: "/api" },
           userCaseService: { status: "UP", name: "User & Case Service", version: "1.0.0" },
-          notificationService: { status: "UP", name: "Notification Service", endpoint: "http://localhost:8083" },
+          notificationService: { status: "UP", name: "Notification Service", endpoint: "/api/notifications" },
           aiService: {
             status: "UP",
             name: "Python FastAPI AI Service",
             version: "1.0.0",
+            endpoint: "Internal Microservice",
             models: { face: "READY", text: "READY", cctv: "READY", attribute: "READY", location: "READY", time: "READY" }
           },
           database: { status: "UP", name: "MySQL Relational Database", details: "Connection pool active & responsive" }
@@ -159,7 +160,7 @@ export default function SystemHealthMonitoringCard() {
               <span className="text-xs font-bold text-app">API Gateway</span>
               {getStatusBadge(services.apiGateway?.status)}
             </div>
-            <p className="text-[10px] text-muted font-mono truncate">{services.apiGateway?.endpoint || "http://localhost:8080"}</p>
+            <p className="text-[10px] text-muted font-mono truncate">{services.apiGateway?.endpoint || "/api"}</p>
           </div>
 
           {/* User & Case Service */}
@@ -177,7 +178,7 @@ export default function SystemHealthMonitoringCard() {
               <span className="text-xs font-bold text-app">Notification Svc</span>
               {getStatusBadge(services.notificationService?.status)}
             </div>
-            <p className="text-[10px] text-muted font-mono truncate">{services.notificationService?.endpoint || "http://localhost:8083"}</p>
+            <p className="text-[10px] text-muted font-mono truncate">{services.notificationService?.endpoint || "/api/notifications"}</p>
           </div>
 
           {/* Python AI Service */}
@@ -186,7 +187,7 @@ export default function SystemHealthMonitoringCard() {
               <span className="text-xs font-bold text-app">Python AI Svc</span>
               {getStatusBadge(services.aiService?.status)}
             </div>
-            <p className="text-[10px] text-muted font-mono truncate">{services.aiService?.endpoint || "http://localhost:8000"}</p>
+            <p className="text-[10px] text-muted font-mono truncate">{services.aiService?.endpoint || "Internal Microservice"}</p>
           </div>
 
           {/* MySQL Database */}

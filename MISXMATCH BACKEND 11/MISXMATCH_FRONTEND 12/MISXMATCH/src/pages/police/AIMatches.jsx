@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import AiSafetyQualityPanel from "@/components/ai/AiSafetyQualityPanel";
 import SafeImage from "@/components/ui/SafeImage";
+import { getFileUrl } from "@/utils/helpers";
 
 
 export default function AIMatches() {
@@ -395,6 +396,14 @@ export default function AIMatches() {
           </div>
         }
       />
+
+      {/* Mandatory Statutory AI Decision-Support Notice */}
+      <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-3 text-xs text-amber-700 dark:text-amber-300">
+        <ShieldCheck className="w-5 h-5 shrink-0 text-amber-500" />
+        <p className="leading-relaxed">
+          <strong>AI Decision-Support System:</strong> Candidate suggestions require officer field verification before legal identification. Automatic case closure based solely on AI output is strictly prohibited.
+        </p>
+      </div>
 
       {loading ? (
         <Card className="py-20 flex flex-col items-center justify-center text-muted">
@@ -989,7 +998,7 @@ export default function AIMatches() {
                                 </div>
                                 {ev.fileUrl && (
                                   <a
-                                    href={ev.fileUrl.startsWith("http") ? ev.fileUrl : `http://localhost:8080${ev.fileUrl}`}
+                                    href={getFileUrl(ev.fileUrl)}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="btn btn-outline !py-1 !px-2 text-[11px] flex items-center gap-1 shrink-0"
@@ -1414,7 +1423,7 @@ export default function AIMatches() {
 
                         {ev.fileUrl && (
                           <a
-                            href={ev.fileUrl.startsWith("http") ? ev.fileUrl : `http://localhost:8080${ev.fileUrl}`}
+                            href={getFileUrl(ev.fileUrl)}
                             target="_blank"
                             rel="noreferrer"
                             className="btn btn-outline text-xs !py-1.5 !px-3 flex items-center gap-1.5 shrink-0 self-start sm:self-auto"

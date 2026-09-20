@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { caseApi, notificationApi, caseIntelligenceApi } from "@/lib/api";
 import { priorityBadgeClass, CASE_STATUS_CONFIG } from "@/utils/constants";
+import { getFileUrl } from "@/utils/helpers";
 
 export default function CaseDetails() {
   const { id } = useParams();
@@ -651,7 +652,7 @@ export default function CaseDetails() {
                     </div>
                     {ev.fileUrl && (
                       <a
-                        href={ev.fileUrl.startsWith("http") ? ev.fileUrl : `http://localhost:8080${ev.fileUrl}`}
+                        href={getFileUrl(ev.fileUrl)}
                         target="_blank"
                         rel="noreferrer"
                         className="btn btn-outline !py-1 !px-2 text-[10.5px] flex items-center gap-1 shrink-0"

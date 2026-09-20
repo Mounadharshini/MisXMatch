@@ -59,13 +59,13 @@ services:
       context: ./ai-service
       dockerfile: Dockerfile
     container_name: misxmatch-ai-service
-    restart: unless-stopped
-    ports:
-      - "8000:8000"
+    # Internal AI service - accessible strictly inside misxmatch-net
+    expose:
+      - "8000"
     environment:
       - PORT=8000
       - HOST=0.0.0.0
-      - ENV=${ENV:-development}
+      - ENV=${ENV:-production}
       - AI_SERVICE_KEY=${AI_SERVICE_KEY:-misxmatch-internal-ai-service-secret-key-2026}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:8080,http://localhost:80}
     healthcheck:

@@ -28,16 +28,16 @@ class MultiMatchService:
         them so the sum of raw base weights equals 1.0.
         """
         raw = {
-            "face": float(os.getenv("MULTI_MATCH_WEIGHT_FACE", "0.35")),
-            "text": float(os.getenv("MULTI_MATCH_WEIGHT_TEXT", "0.20")),
-            "attributes": float(os.getenv("MULTI_MATCH_WEIGHT_ATTRIBUTE", "0.20")),
-            "location": float(os.getenv("MULTI_MATCH_WEIGHT_LOCATION", "0.15")),
+            "face": float(os.getenv("MULTI_MATCH_WEIGHT_FACE", "0.40")),
+            "text": float(os.getenv("MULTI_MATCH_WEIGHT_TEXT", "0.25")),
+            "attributes": float(os.getenv("MULTI_MATCH_WEIGHT_ATTRIBUTE", "0.15")),
+            "location": float(os.getenv("MULTI_MATCH_WEIGHT_LOCATION", "0.10")),
             "time": float(os.getenv("MULTI_MATCH_WEIGHT_TIME", "0.10")),
         }
         total_raw = sum(raw.values())
         if total_raw <= 0:
-            # Fallback to standard defaults if total raw weight is non-positive
-            return {"face": 0.35, "text": 0.20, "attributes": 0.20, "location": 0.15, "time": 0.10}
+            # Fallback to standard specification defaults if total raw weight is non-positive
+            return {"face": 0.40, "text": 0.25, "attributes": 0.15, "location": 0.10, "time": 0.10}
 
         # Normalize raw weights to sum to 1.0
         normalized_raw = {k: round(v / total_raw, 4) for k, v in raw.items()}

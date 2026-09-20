@@ -7,6 +7,7 @@ import {
 import { caseApi } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 import { useAuth } from "@/context/AuthContext";
+import { getFileUrl } from "@/utils/helpers";
 
 export default function ReunificationPromptModal({
   caseNumber,
@@ -235,7 +236,7 @@ export default function ReunificationPromptModal({
                         </div>
                         {ev.fileUrl && (
                           <a
-                            href={ev.fileUrl.startsWith("http") ? ev.fileUrl : `http://localhost:8080${ev.fileUrl}`}
+                            href={getFileUrl(ev.fileUrl)}
                             target="_blank"
                             rel="noreferrer"
                             className="btn btn-outline !py-1 !px-2 text-[10px] flex items-center gap-1 shrink-0"
