@@ -1,0 +1,211 @@
+version: '3.8'
+
+services:
+  # -------------------------------------------------------------
+  # 1. Central Relational Database (MySQL 8.0)
+  # -------------------------------------------------------------
+  mysql-db:
+    image: mysql:8.0
+    container_name: misxmatch-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Mouna@182}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-misxmatch_db}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./MISXMATCH BACKEND 11/MISXMATCH 10/mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-Mouna@182}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      misxmatch-net:
+        aliases:
+          - mysql
+          - mysql-db
+
+  # -------------------------------------------------------------
+  # 2. S3-Compatible Object Storage Service (MinIO)
+  # -------------------------------------------------------------
+  minio:
+    image: minio/minio:RELEASE.2024-01-16T16-07-38Z
+    container_name: misxmatch-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - misxmatch-net
+
+  # -------------------------------------------------------------
+  # 3. Python AI Biometric & Vision Microservice (FastAPI)
+  # -------------------------------------------------------------
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: misxmatch-ai-service
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - ENV=${ENV:-development}
+      - AI_SERVICE_KEY=${AI_SERVICE_KEY:-misxmatch-internal-ai-service-secret-key-2026}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:8080,http://localhost:80}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - misxmatch-net
+
+  # -------------------------------------------------------------
+  # 4. User Identity & Authentication Microservice (Spring Boot)
+  # -------------------------------------------------------------
+  auth-service:
+    build:
+      context: ./MISXMATCH BACKEND 11/MISXMATCH 10
+      dockerfile: auth-service/Dockerfile
+    container_name: misxmatch-auth-service
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USER=${MYSQL_USER:-root}
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD:-Mouna@182}
+      - JWT_SECRET=${JWT_SECRET:-misxmatch-super-secret-signing-key-change-in-prod-2026-01}
+      - OTP_MODE=${OTP_MODE:-development}
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - misxmatch-net
+
+  # -------------------------------------------------------------
+  # 5. Case & Intelligence Management Microservice (Spring Boot)
+  # -------------------------------------------------------------
+  case-service:
+    build:
+      context: ./MISXMATCH BACKEND 11/MISXMATCH 10
+      dockerfile: case-service/Dockerfile
+    container_name: misxmatch-case-service
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USER=${MYSQL_USER:-root}
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD:-Mouna@182}
+      - AI_SERVICE_URL=http://ai-service:8000
+      - AI_SERVICE_KEY=${AI_SERVICE_KEY:-misxmatch-internal-ai-service-secret-key-2026}
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8084
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-minioadmin}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-minioadmin}
+      - JWT_SECRET=${JWT_SECRET:-misxmatch-super-secret-signing-key-change-in-prod-2026-01}
+    volumes:
+      - case_uploads:/app/uploads_storage
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      ai-service:
+        condition: service_healthy
+    networks:
+      - misxmatch-net
+
+  # -------------------------------------------------------------
+  # 6. Notification & Audit Log Microservice (Spring Boot)
+  # -------------------------------------------------------------
+  notification-service:
+    build:
+      context: ./MISXMATCH BACKEND 11/MISXMATCH 10
+      dockerfile: notification-service/Dockerfile
+    container_name: misxmatch-notification-service
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USER=${MYSQL_USER:-root}
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD:-Mouna@182}
+      - JWT_SECRET=${JWT_SECRET:-misxmatch-super-secret-signing-key-change-in-prod-2026-01}
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - misxmatch-net
+
+  # -------------------------------------------------------------
+  # 7. Central API Gateway (Spring Cloud Gateway)
+  # -------------------------------------------------------------
+  gateway-service:
+    build:
+      context: ./MISXMATCH BACKEND 11/MISXMATCH 10
+      dockerfile: gateway-service/Dockerfile
+    container_name: misxmatch-gateway-service
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - AUTH_SERVICE_HOST=auth-service
+      - CASE_SERVICE_HOST=case-service
+      - NOTIFICATION_SERVICE_HOST=notification-service
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:3000,http://localhost:80}
+      - JWT_SECRET=${JWT_SECRET:-misxmatch-super-secret-signing-key-change-in-prod-2026-01}
+    depends_on:
+      - auth-service
+      - case-service
+      - notification-service
+    networks:
+      - misxmatch-net
+
+  # -------------------------------------------------------------
+  # 8. React Frontend Web App (Vite + Nginx)
+  # -------------------------------------------------------------
+  frontend:
+    build:
+      context: ./MISXMATCH BACKEND 11/MISXMATCH_FRONTEND 12/MISXMATCH
+      dockerfile: Dockerfile
+    container_name: misxmatch-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_BASE_URL=/api
+    depends_on:
+      - gateway-service
+    networks:
+      - misxmatch-net
+
+networks:
+  misxmatch-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  case_uploads:
+  minio_data:

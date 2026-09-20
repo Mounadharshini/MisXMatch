@@ -1,0 +1,30 @@
+# Environment files with secrets
+.env
+.env.local
+*.env
+
+# Build outputs & dependencies
+target/
+dist/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+uploads_storage/
+mysql_data/
+minio_data/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.log
+scratch/
+
+# Large model files (>100MB GitHub limit)
+ai-service/weights/arcface_resnet100_512.onnx
+*.onnx.large
+*.tar.gz
+*.zip

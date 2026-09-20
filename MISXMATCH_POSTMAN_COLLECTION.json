@@ -1,0 +1,326 @@
+{
+  "info": {
+    "name": "MISXMATCH National Platform API Collection",
+    "description": "Complete Postman API Collection covering all Auth, Case Management, AI Biometrics, CCTV Surveillance, Notifications, and System Administration microservices.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication & Users",
+      "item": [
+        {
+          "name": "User Registration",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"officer_rajesh\",\n  \"email\": \"rajesh.police@delhipolice.gov.in\",\n  \"password\": \"Police@123\",\n  \"role\": \"POLICE\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "User Login (Get JWT Token)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"police_officer\",\n  \"password\": \"Police@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/users/profile", "host": ["{{baseUrl}}"], "path": ["users", "profile"] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Insp. Rajesh Sharma\",\n  \"phone\": \"+91 9811223344\",\n  \"address\": \"Crime Branch HQ, Delhi Police\",\n  \"city\": \"New Delhi\",\n  \"state\": \"Delhi\",\n  \"pincode\": \"110006\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/users/profile", "host": ["{{baseUrl}}"], "path": ["users", "profile"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Case Management (Missing & Found)",
+      "item": [
+        {
+          "name": "Report Missing Person",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aarav Sharma\",\n  \"age\": 12,\n  \"gender\": \"Male\",\n  \"height\": \"4 ft 8 in\",\n  \"complexion\": \"Fair\",\n  \"identifyingMarks\": \"Scar on left eyebrow, wears silver wrist kada\",\n  \"lastSeenLocation\": \"Kashmere Gate ISBT, Delhi\",\n  \"lastSeenDate\": \"2026-08-10\",\n  \"photoUrl\": \"https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400\",\n  \"description\": \"Last seen wearing navy blue woolen sweater and dark denim jeans near bus bay 4\",\n  \"contactPhone\": \"+91 9876543210\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/missing", "host": ["{{baseUrl}}"], "path": ["cases", "missing"] }
+          }
+        },
+        {
+          "name": "List All Missing Persons",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/missing?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "missing"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Missing Case by ID or CaseNumber",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/missing/MP-20260001", "host": ["{{baseUrl}}"], "path": ["cases", "missing", "MP-20260001"] }
+          }
+        },
+        {
+          "name": "Report Found Person / Hospital Intake",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approximateName\": \"Unidentified Boy\",\n  \"approximateAge\": 12,\n  \"gender\": \"Male\",\n  \"foundLocation\": \"Old Delhi Railway Station Platform 3\",\n  \"currentLocation\": \"AIIMS Pediatric Emergency Ward 4\",\n  \"category\": \"HOSPITAL\",\n  \"photoUrl\": \"https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400\",\n  \"description\": \"Admitted in disoriented condition wearing blue woolen sweater\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/found", "host": ["{{baseUrl}}"], "path": ["cases", "found"] }
+          }
+        },
+        {
+          "name": "List All Found Persons",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/found?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "found"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Citizen Sighting",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"missingCaseNumber\": \"MP-20260001\",\n  \"location\": \"Mori Gate Bus Stand, Delhi\",\n  \"description\": \"Saw individual matching description drinking tea near stall\",\n  \"photoUrl\": \"https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400\",\n  \"contactPhone\": \"+91 9988776655\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/sighting", "host": ["{{baseUrl}}"], "path": ["cases", "sighting"] }
+          }
+        },
+        {
+          "name": "List Sightings",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/sightings", "host": ["{{baseUrl}}"], "path": ["cases", "sightings"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. AI Intelligence & Biometrics",
+      "item": [
+        {
+          "name": "AI Natural Language Semantic Search",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"12 year old boy in blue sweater near Delhi station\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/ai/search-nlp", "host": ["{{baseUrl}}"], "path": ["cases", "ai", "search-nlp"] }
+          }
+        },
+        {
+          "name": "List AI Biometric Match Candidates",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/matches", "host": ["{{baseUrl}}"], "path": ["cases", "matches"] }
+          }
+        },
+        {
+          "name": "Review AI Match Hit (Approve / Dismiss)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"VERIFIED_MATCH\",\n  \"updateCaseStatusToReunited\": true,\n  \"reviewNotes\": \"Face biometrics and scar marks confirmed by Investigating Officer.\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/matches/1/review", "host": ["{{baseUrl}}"], "path": ["cases", "matches", "1", "review"] }
+          }
+        },
+        {
+          "name": "Run AI OCR on FIR / Document Evidence",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentBase64OrText\": \"FIRST INFORMATION REPORT\\nPS: Kashmere Gate | FIR No: 409/2026\\nName: Aarav Sharma | Age: 12 Yrs | Gender: Male | Marks: Scar near left eyebrow\\nLocation: Kashmere Gate Metro Station\\nClothing: Navy blue sweater, dark jeans\",\n  \"documentType\": \"FIR\",\n  \"caseNumber\": \"MP-20260001\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/ai/ocr", "host": ["{{baseUrl}}"], "path": ["cases", "ai", "ocr"] }
+          }
+        },
+        {
+          "name": "Assess Case Risk Score",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/ai/assess-risk/1", "host": ["{{baseUrl}}"], "path": ["cases", "ai", "assess-risk", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. CCTV Surveillance & Leads",
+      "item": [
+        {
+          "name": "List Active CCTV Cameras",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/cctv/cameras", "host": ["{{baseUrl}}"], "path": ["cases", "cctv", "cameras"] }
+          }
+        },
+        {
+          "name": "Scan CCTV Video Frame for Missing Dossier",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"missingCaseNumber\": \"MP-20260001\",\n  \"cameraId\": \"CAM-DL-04\",\n  \"frameImageUrl\": \"https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/cctv/scan", "host": ["{{baseUrl}}"], "path": ["cases", "cctv", "scan"] }
+          }
+        },
+        {
+          "name": "Save Confirmed CCTV Investigation Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"caseNumber\": \"MP-20260001\",\n  \"cameraId\": \"CAM-DL-04\",\n  \"cameraName\": \"Kashmere Gate Metro Gate 2\",\n  \"location\": \"Delhi NCR\",\n  \"confidence\": 0.942,\n  \"frameUrl\": \"https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400\",\n  \"notes\": \"Subject detected walking towards bus terminal at 14:32 hrs\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cases/cctv/leads", "host": ["{{baseUrl}}"], "path": ["cases", "cctv", "leads"] }
+          }
+        },
+        {
+          "name": "List CCTV Investigation Leads",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/cctv/leads", "host": ["{{baseUrl}}"], "path": ["cases", "cctv", "leads"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Notifications & Emergency Broadcast",
+      "item": [
+        {
+          "name": "List User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/notifications", "host": ["{{baseUrl}}"], "path": ["notifications"] }
+          }
+        },
+        {
+          "name": "Dispatch Amber Emergency Alert (Multi-Channel)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"caseNumber\": \"MP-20260001\",\n  \"personName\": \"Aarav Sharma\",\n  \"age\": 12,\n  \"gender\": \"Male\",\n  \"lastSeenLocation\": \"Kashmere Gate ISBT, Delhi\",\n  \"description\": \"Navy blue sweater, critical 72hr rapid intercept\",\n  \"priority\": \"CRITICAL\",\n  \"broadcastRadius\": \"50km Regional Radius\",\n  \"targetChannels\": [\"PORTAL_ALERT\", \"SMS_GATEWAY\", \"WHATSAPP_DISPATCH\", \"HOSPITAL_ER_ALERTS\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/notifications/broadcast-emergency", "host": ["{{baseUrl}}"], "path": ["notifications", "broadcast-emergency"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Analytics & Audit Logs",
+      "item": [
+        {
+          "name": "System-Wide Statistics",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cases/stats", "host": ["{{baseUrl}}"], "path": ["cases", "stats"] }
+          }
+        },
+        {
+          "name": "User Role Breakdown Stats",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/auth/stats/roles", "host": ["{{baseUrl}}"], "path": ["auth", "stats", "roles"] }
+          }
+        },
+        {
+          "name": "Immutable Audit Log Ledger",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/notifications/audit-logs?page=0&size=20", "host": ["{{baseUrl}}"], "path": ["notifications", "audit-logs"] }
+          }
+        }
+      ]
+    }
+  ]
+}

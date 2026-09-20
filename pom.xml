@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.misxmatch</groupId>
+  <artifactId>misxmatch-root</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+  <name>MISXMATCH Root Platform</name>
+
+  <modules>
+    <module>MISXMATCH BACKEND 11/MISXMATCH 10/gateway-service</module>
+    <module>MISXMATCH BACKEND 11/MISXMATCH 10/auth-service</module>
+    <module>MISXMATCH BACKEND 11/MISXMATCH 10/case-service</module>
+    <module>MISXMATCH BACKEND 11/MISXMATCH 10/notification-service</module>
+  </modules>
+</project>

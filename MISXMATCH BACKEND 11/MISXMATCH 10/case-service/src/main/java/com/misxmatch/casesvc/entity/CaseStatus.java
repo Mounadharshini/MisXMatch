@@ -1,0 +1,18 @@
+package com.misxmatch.casesvc.entity;
+
+public enum CaseStatus {
+    OPEN,
+    SUBMITTED,
+    ACTIVE,
+    UNDER_INVESTIGATION,
+    MATCH_FOUND,
+    VERIFICATION_PENDING,
+    EVIDENCE_SUBMITTED,
+    REUNIFICATION_PENDING,
+    REUNIFICATION_CONFIRMED,
+    REUNITED,
+    CLOSED,
+    MATCH_REJECTED,
+    CLOSURE_REQUESTED
+}
+

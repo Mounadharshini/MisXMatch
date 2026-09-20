@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:case_db;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+jwt:
+  secret: misxmatch-super-secret-signing-key-change-in-prod-2026-01
+  access-token-expiration-ms: 900000
+  refresh-token-expiration-ms: 604800000
+
+otp:
+  mode: development
+  expiry-minutes: 5
+  max-attempts: 5
+  resend-cooldown-seconds: 60
+  mail-from: no-reply@misxmatch.org
+
+ai:
+  matching:
+    provider: real
+    max-candidates: 5
+  service:
+    url: http://localhost:8000
+    connect-timeout-ms: 5000
+    read-timeout-ms: 15000
+
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: misxmatch-uploads

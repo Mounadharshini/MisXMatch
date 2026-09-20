@@ -1,0 +1,40 @@
+{
+  "evaluationTimestamp": "2026-08-27T08:08:40Z",
+  "validationSamples": 100,
+  "metrics": {
+    "precision": 1.0,
+    "recall": 0.14,
+    "falsePositiveRate": 0.0,
+    "falseNegativeRate": 0.86,
+    "expectedCalibrationError": 0.3516,
+    "averageLatencyMs": 0.01
+  },
+  "conditionBreakdown": {
+    "EXCELLENT": {
+      "total": 20,
+      "quality_passed": 20,
+      "correct_leads": 12
+    },
+    "LOW_LIGHTING": {
+      "total": 20,
+      "quality_passed": 0,
+      "correct_leads": 13
+    },
+    "BLURRY": {
+      "total": 20,
+      "quality_passed": 0,
+      "correct_leads": 10
+    },
+    "MULTI_FACE": {
+      "total": 20,
+      "quality_passed": 0,
+      "correct_leads": 11
+    },
+    "OVEREXPOSED": {
+      "total": 20,
+      "quality_passed": 0,
+      "correct_leads": 11
+    }
+  },
+  "disclaimer": "Evaluated on identity-disjoint validation data. Protected attribute demographic profiling is disabled."
+}

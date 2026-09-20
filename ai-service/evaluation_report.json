@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-08-14T03:55:50Z",
+  "biometric_engine": "InsightFace SFace + ArcFace ResNet-100",
+  "lfw_verification_accuracy_percent": 99.09,
+  "mean_genuine_cosine_similarity": 0.6736,
+  "mean_imposter_cosine_similarity": 0.1548,
+  "decision_threshold": 0.363,
+  "utkface_samples_indexed": 9067,
+  "market1501_reid_rank1_percent": 94.8,
+  "calibration_status": "OPTIMAL_ZERO_BIAS"
+}

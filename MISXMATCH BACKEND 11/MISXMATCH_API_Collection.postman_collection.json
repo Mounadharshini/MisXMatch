@@ -1,0 +1,1367 @@
+{
+  "info": {
+    "_postman_id": "9b12e345-6789-4abc-def0-1234567890ab",
+    "name": "MISXMATCH Platform APIs (Full Real-World Collection)",
+    "description": "Production-grade API Collection for MISXMATCH — AI-Based Missing Person Search & Reunification Platform.\n\n### Authentication & Token Workflow\n1. Run **Login as Super Admin** or **Login as Police** in the `01. Authentication & OTP` folder.\n2. The test script automatically saves the returned JWT `accessToken` into `{{authToken}}`.\n3. All other requests will automatically inherit and use `{{authToken}}` in their `Authorization: Bearer {{authToken}}` header.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "resetToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "missingCaseId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "missingCaseNumber",
+      "value": "MP-20260001",
+      "type": "string"
+    },
+    {
+      "key": "foundCaseNumber",
+      "value": "FP-20260001",
+      "type": "string"
+    },
+    {
+      "key": "sightingId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "notificationId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "evidenceId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "01. Authentication & OTP",
+      "description": "User registration, JWT login, token refresh, password recovery and 6-digit mobile OTP verification.",
+      "item": [
+        {
+          "name": "Login as Super Admin (Default: admin/admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+                  "    pm.environment.set('authToken', jsonData.accessToken);",
+                  "    pm.environment.set('refreshToken', jsonData.refreshToken);",
+                  "    console.log('Super Admin Token Set: ' + jsonData.accessToken.substring(0, 15) + '...');",
+                  "}",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response contains JWT accessToken', function () {",
+                  "    pm.expect(jsonData.accessToken).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"admin\",\n  \"password\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Police Officer (police_officer/police123)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+                  "    pm.environment.set('authToken', jsonData.accessToken);",
+                  "    pm.environment.set('refreshToken', jsonData.refreshToken);",
+                  "    console.log('Police Officer Token Set');",
+                  "}",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"police_officer\",\n  \"password\": \"police123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Hospital Staff (hospital_staff/hospital123)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.accessToken);",
+                  "    pm.environment.set('authToken', jsonData.accessToken);",
+                  "}",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"hospital_staff\",\n  \"password\": \"hospital123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Public User (john_citizen/citizen123)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.accessToken);",
+                  "    pm.environment.set('authToken', jsonData.accessToken);",
+                  "}",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"john_citizen\",\n  \"password\": \"citizen123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register New Citizen User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.accessToken);",
+                  "    pm.environment.set('authToken', jsonData.accessToken);",
+                  "}",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"rahul_verma\",\n  \"email\": \"rahul.verma@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"PUBLIC_USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Send Mobile OTP",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobile\": \"+919876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/send-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "send-otp"]
+            }
+          }
+        },
+        {
+          "name": "Verify Mobile OTP",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobile\": \"+919876543210\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "Resend Mobile OTP (60s Cooldown)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobile\": \"+919876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/resend-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "resend-otp"]
+            }
+          }
+        },
+        {
+          "name": "Refresh JWT Access Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.resetToken) {",
+                  "    pm.collectionVariables.set('resetToken', jsonData.resetToken);",
+                  "    pm.environment.set('resetToken', jsonData.resetToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.citizen@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resetToken\": \"{{resetToken}}\",\n  \"newPassword\": \"Citizen@2026\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Logout (Revoke Refresh Token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Super Admin & Platform Administration",
+      "description": "Super Admin operations: Admin user creation, password reset, platform user status management and role statistics.",
+      "item": [
+        {
+          "name": "Get User Counts by Role (Admin/Super Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/auth/admin/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "admin", "stats"]
+            }
+          }
+        },
+        {
+          "name": "List All Administrators (Super Admin only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/auth/super-admin/admins",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "super-admin", "admins"]
+            }
+          }
+        },
+        {
+          "name": "Create New Administrator (Super Admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"admin_delhi_north\",\n  \"email\": \"admin.north@misxmatch.gov.in\",\n  \"password\": \"AdminNorth@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/super-admin/create-admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "super-admin", "create-admin"]
+            }
+          }
+        },
+        {
+          "name": "Reset Admin Password (Super Admin only)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/auth/super-admin/admin/admin_delhi_north/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "super-admin", "admin", "admin_delhi_north", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Delete Admin (Super Admin only)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/auth/super-admin/admin/admin_delhi_north",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "super-admin", "admin", "admin_delhi_north"]
+            }
+          }
+        },
+        {
+          "name": "List All Registered Platform Users (Admin only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "Toggle User Account Status (Suspend/Activate)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/john_citizen/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "john_citizen", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. User Profiles & Aadhaar eKYC",
+      "description": "User profile viewing, updates, role retrieval and Aadhaar eKYC verification.",
+      "item": [
+        {
+          "name": "Get Authenticated User Profile",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Authenticated User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Inspector Rajesh Sharma\",\n  \"phone\": \"+91 9871122334\",\n  \"address\": \"Kashmere Gate Police Complex, North Delhi\",\n  \"city\": \"Delhi\",\n  \"state\": \"Delhi\",\n  \"pincode\": \"110006\",\n  \"profilePhotoUrl\": \"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile by User ID (Admin/Police only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/users/john_citizen",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "john_citizen"]
+            }
+          }
+        },
+        {
+          "name": "Verify Aadhaar (12-Digit eKYC Hash)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"aadhaarNumber\": \"554433221100\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/aadhaar/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["aadhaar", "verify"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Organization Management",
+      "description": "Institutional registration for Police, Hospital, NGO, and Shelter accounts and Admin review workflow.",
+      "item": [
+        {
+          "name": "Submit Organization Details for Verification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgName\": \"Safdarjung Hospital Emergency Unit\",\n  \"orgType\": \"HOSPITAL\",\n  \"registrationNumber\": \"SJH-DL-2024-09\",\n  \"jurisdiction\": \"South Delhi District\",\n  \"contactPerson\": \"Dr. S. K. Gupta\",\n  \"contactPhone\": \"+91 11 26165060\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/organization",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "organization"]
+            }
+          }
+        },
+        {
+          "name": "Get My Organization Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/users/organization",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "organization"]
+            }
+          }
+        },
+        {
+          "name": "List Pending Organizations (Admin only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/organizations/pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "organizations", "pending"]
+            }
+          }
+        },
+        {
+          "name": "Approve Organization (Admin only)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/admin/organizations/police_officer/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "organizations", "police_officer", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Reject Organization (Admin only)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/admin/organizations/police_officer/reject",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "organizations", "police_officer", "reject"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Missing Person Case Management",
+      "description": "Report missing persons, retrieve active directory, update cases, manage investigation status and stats.",
+      "item": [
+        {
+          "name": "Report Missing Person",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('missingCaseId', jsonData.id);",
+                  "    pm.collectionVariables.set('missingCaseNumber', jsonData.caseNumber);",
+                  "    pm.environment.set('missingCaseId', jsonData.id);",
+                  "    pm.environment.set('missingCaseNumber', jsonData.caseNumber);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Siddharth Joshi\",\n  \"age\": 16,\n  \"gender\": \"Male\",\n  \"height\": \"5 ft 6 in\",\n  \"complexion\": \"Fair\",\n  \"identifyingMarks\": \"Scar on chin, wears black rimmed spectacles\",\n  \"lastSeenLocation\": \"Kashmere Gate Metro Station, Delhi\",\n  \"lastSeenDate\": \"2026-08-09\",\n  \"photoUrl\": \"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400\",\n  \"description\": \"Wearing navy blue graphic hoodie and grey sweatpants. Carried a black sports duffel bag.\",\n  \"contactPhone\": \"+91 9876501234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/missing",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "missing"]
+            }
+          }
+        },
+        {
+          "name": "List All Missing Persons (Public)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/missing",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "missing"]
+            }
+          }
+        },
+        {
+          "name": "List Missing Persons Filtered by Reporter",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/missing?reportedBy=john_citizen",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "missing"],
+              "query": [
+                {
+                  "key": "reportedBy",
+                  "value": "john_citizen"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Missing Person by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/missing/{{missingCaseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "missing", "{{missingCaseId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Missing Person Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Siddharth Joshi\",\n  \"age\": 16,\n  \"gender\": \"Male\",\n  \"height\": \"5 ft 6 in\",\n  \"complexion\": \"Fair\",\n  \"identifyingMarks\": \"Scar on chin, wears black rimmed spectacles\",\n  \"lastSeenLocation\": \"Near Kashmere Gate ISBT Platform 3\",\n  \"lastSeenDate\": \"2026-08-09\",\n  \"photoUrl\": \"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400\",\n  \"description\": \"Wearing navy blue hoodie, grey sweatpants. Seen asking for directions to Dehradun.\",\n  \"contactPhone\": \"+91 9876501234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/missing/{{missingCaseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "missing", "{{missingCaseId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Case Status (Police/Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"UNDER_INVESTIGATION\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/missing/{{missingCaseId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "missing", "{{missingCaseId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Get Status by Case Number",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/status/{{missingCaseNumber}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "status", "{{missingCaseNumber}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Aggregated Case & Surveillance Statistics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Delete Missing Person Case (Admin/Police)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/cases/missing/{{missingCaseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "missing", "{{missingCaseId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Found Persons (Hospital / Shelter / NGO / General)",
+      "description": "Registration and categorized querying for found individuals, hospital intakes, and shelter residents.",
+      "item": [
+        {
+          "name": "Report Found Person (Hospital Patient)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approximateName\": \"Unidentified Teenager\",\n  \"approximateAge\": 16,\n  \"gender\": \"Male\",\n  \"foundLocation\": \"ISBT Kashmere Gate Outer Ring Road\",\n  \"foundDate\": \"2026-08-10\",\n  \"photoUrl\": \"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400\",\n  \"description\": \"Admitted with minor sprain, wearing navy hoodie and sweatpants. Non-communicative.\",\n  \"currentLocation\": \"Pediatric Trauma Ward B, AIIMS New Delhi\",\n  \"category\": \"HOSPITAL\",\n  \"metadata\": \"{\\\"department\\\":\\\"Emergency\\\",\\\"condition\\\":\\\"Stable\\\",\\\"admittedBy\\\":\\\"PCR-12\\\"}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/found",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "found"]
+            }
+          }
+        },
+        {
+          "name": "Report Found Person (Shelter Resident)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approximateName\": \"Elderly Male\",\n  \"approximateAge\": 70,\n  \"gender\": \"Male\",\n  \"foundLocation\": \"Dadar Flower Market, Mumbai\",\n  \"foundDate\": \"2026-08-08\",\n  \"photoUrl\": \"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400\",\n  \"description\": \"Disoriented senior citizen brought in by volunteers. White kurta and glasses.\",\n  \"currentLocation\": \"Sneha Sadan Care Home, Andheri East\",\n  \"category\": \"SHELTER\",\n  \"metadata\": \"{\\\"shelterId\\\":\\\"SNEHA-01\\\",\\\"careLevel\\\":\\\"Senior Assisted\\\"}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/found",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "found"]
+            }
+          }
+        },
+        {
+          "name": "List All Found Persons",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/found",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "found"]
+            }
+          }
+        },
+        {
+          "name": "List Found Persons Filtered by Category (HOSPITAL)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/found?category=HOSPITAL",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "found"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "HOSPITAL"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Found Persons Filtered by Category (SHELTER)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/found?category=SHELTER",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "found"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "SHELTER"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Found Persons Filtered by Category (NGO)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/found?category=NGO",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "found"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "NGO"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. Sighting Reports",
+      "description": "Public sighting submissions and police verification/dismissal operations.",
+      "item": [
+        {
+          "name": "Submit Sighting Report (Public/Anonymous)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"missingCaseNumber\": \"{{missingCaseNumber}}\",\n  \"location\": \"Near Kashmiri Gate Bus Depot Counter 4\",\n  \"description\": \"Saw an adolescent boy matching the photo eating samosas near the tea stall around 4:30 PM.\",\n  \"photoUrl\": \"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=400\",\n  \"sightedAt\": \"2026-08-11T16:30:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/sighting",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "sighting"]
+            }
+          }
+        },
+        {
+          "name": "List All Sighting Reports (Police/Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/sightings",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "sightings"]
+            }
+          }
+        },
+        {
+          "name": "Verify Sighting (Police/Admin)",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/cases/sightings/{{sightingId}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "sightings", "{{sightingId}}", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Dismiss Sighting (Police/Admin)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/cases/sightings/{{sightingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "sightings", "{{sightingId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08. AI Matching & CCTV Surveillance",
+      "description": "Multi-modal explainable AI feature matching, CCTV camera feeds, and automated frame scanning.",
+      "item": [
+        {
+          "name": "Run AI Image & Facial Similarity Match",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"missingCaseNumber\": \"{{missingCaseNumber}}\",\n  \"imageUrl\": \"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=400\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/match/image",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "match", "image"]
+            }
+          }
+        },
+        {
+          "name": "Run AI NLP Text & Description Match",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"missingCaseNumber\": \"{{missingCaseNumber}}\",\n  \"description\": \"Boy wearing navy sweater and dark shorts admitted with minor injury near Kashmere Gate\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/match/text",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "match", "text"]
+            }
+          }
+        },
+        {
+          "name": "List All Persisted AI Matches (Police/Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/matches",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "matches"]
+            }
+          }
+        },
+        {
+          "name": "List Live CCTV Surveillance Cameras",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/cctv/cameras",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "cctv", "cameras"]
+            }
+          }
+        },
+        {
+          "name": "Trigger AI CCTV Frame Surveillance Scan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cameraCode\": \"CAM-401\",\n  \"frameImageUrl\": \"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=400\",\n  \"missingCaseNumber\": \"{{missingCaseNumber}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/cctv/scan",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "cctv", "scan"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09. Case Evidence & Attachments",
+      "description": "Attach, retrieve, and manage case evidence files, CCTV video clips, and document attachments.",
+      "item": [
+        {
+          "name": "Upload / Attach Evidence to Case",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('evidenceId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"caseNumber\": \"{{missingCaseNumber}}\",\n  \"fileUrl\": \"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=800\",\n  \"fileName\": \"cctv_frame_kashmere_gate_1630.jpg\",\n  \"fileType\": \"IMAGE\",\n  \"fileSize\": 245760,\n  \"description\": \"Surveillance snapshot captured at Exit Gate B\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cases/evidence",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "evidence"]
+            }
+          }
+        },
+        {
+          "name": "List All Evidence Files Across Cases",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/evidence",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "evidence"]
+            }
+          }
+        },
+        {
+          "name": "List Evidence Files for Specific Case",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cases/evidence/case/{{missingCaseNumber}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "evidence", "case", "{{missingCaseNumber}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Evidence Record",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/cases/evidence/{{evidenceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cases", "evidence", "{{evidenceId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Notifications",
+      "description": "User notification feed, alert generation, and read status management.",
+      "item": [
+        {
+          "name": "List Notifications for Authenticated User",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications"]
+            }
+          }
+        },
+        {
+          "name": "Create Notification for Recipient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipientUserId\": \"john_citizen\",\n  \"title\": \"Case Update: Investigation in Progress\",\n  \"message\": \"Inspector Rajesh Sharma has taken charge of case MP-20260001.\",\n  \"type\": \"CASE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications"]
+            }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/notifications/{{notificationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "{{notificationId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/notifications/{{notificationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "{{notificationId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Role-Based Dashboards & Metrics",
+      "description": "Tailored statistical endpoints for Admin, Police, Hospital, NGO, and Public portals.",
+      "item": [
+        {
+          "name": "Admin Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "admin"]
+            }
+          }
+        },
+        {
+          "name": "Police Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/police",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "police"]
+            }
+          }
+        },
+        {
+          "name": "Public Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/public",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "public"]
+            }
+          }
+        },
+        {
+          "name": "Hospital Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/hospital",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "hospital"]
+            }
+          }
+        },
+        {
+          "name": "NGO & Shelter Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/ngo",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "ngo"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Immutable Audit Logs",
+      "description": "Permanent tamper-proof audit trail for regulatory compliance and chain-of-custody verification.",
+      "item": [
+        {
+          "name": "List All Platform Audit Logs (Admin only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/notifications/audit-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "audit-logs"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

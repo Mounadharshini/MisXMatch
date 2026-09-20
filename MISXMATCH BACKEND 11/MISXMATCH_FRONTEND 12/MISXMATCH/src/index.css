@@ -1,0 +1,458 @@
+@import "tailwindcss";
+
+/* Make Tailwind's `dark:` variant respond to the app's manual .dark class
+   toggle (ThemeContext) instead of only the OS prefers-color-scheme media
+   query. Without this, dark: utilities silently no-op whenever the OS isn't
+   already in dark mode, which is why text disappeared against dark
+   backgrounds after switching the in-app theme toggle. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-navy-50: #f3f4fc;
+  --color-navy-100: #e2e4f8;
+  --color-navy-200: #c1c6ef;
+  --color-navy-300: #9aa2e2;
+  --color-navy-400: #6f79d1;
+  --color-navy-500: #4b56b8;
+  --color-navy-600: #3a4396;
+  --color-navy-700: #2c3270;
+  --color-navy-800: #202451;
+  --color-navy-900: #131530;
+  --color-navy-950: #0c0e22;
+  --color-teal-400: #34d399;
+  --color-teal-500: #10b981;
+  --color-teal-600: #059669;
+  --color-gold-400: #ffd166;
+  --color-gold-500: #f5a623;
+  --color-gold-600: #d3860a;
+  --color-danger: #e11d48;
+  --color-warn: #f59e0b;
+  --color-ok: #10b981;
+  --font-display: "Roboto", sans-serif;
+  --font-sans: "Roboto", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  --font-accent: "Roboto", sans-serif;
+}
+
+:root {
+  color-scheme: light;
+  --bg: #f5f6fb;
+  --bg-accent-1: rgba(75, 86, 184, .07);
+  --bg-accent-2: rgba(16, 185, 129, .08);
+  --surface: #ffffff;
+  --surface-2: #f9fafc;
+  --text: #0f172a;
+  --muted: #475569;
+  --border: rgba(24, 27, 74, 0.09);
+  --glass: rgba(255,255,255,0.7);
+  --glass-strong: rgba(255,255,255,0.88);
+  --ring: rgba(75, 86, 184, 0.35);
+  --shadow-glow: 0 20px 50px -22px rgba(16,24,43,.18);
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #14182f;
+  --bg-accent-1: rgba(111, 121, 209, .12);
+  --bg-accent-2: rgba(52, 211, 153, .09);
+  --surface: #1c2140;
+  --surface-2: #232a4c;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --border: rgba(255,255,255,0.09);
+  --glass: rgba(28, 33, 64, 0.6);
+  --glass-strong: rgba(28, 33, 64, 0.88);
+  --ring: rgba(154, 162, 226, 0.5);
+  --shadow-glow: 0 25px 70px -28px rgba(0,0,0,.55);
+}
+
+html, body, #root { height: 100%; }
+body {
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(900px 480px at 8% -8%, var(--bg-accent-1), transparent 55%),
+    radial-gradient(800px 460px at 96% 6%, var(--bg-accent-2), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+}
+.uppercase { line-height: 1.35; letter-spacing: 0.08em; }
+
+@layer base {
+  h1,h2,h3,h4,h5 {
+    font-family: var(--font-display);
+    line-height: 1.18;
+    color: var(--text);
+    text-rendering: optimizeLegibility;
+  }
+  h1 { font-size: clamp(1.85rem, 1.45rem + 1.8vw, 2.75rem); font-weight: 800; letter-spacing: -0.028em; }
+  h2 { font-size: clamp(1.38rem, 1.2rem + 1vw, 2rem); font-weight: 750; letter-spacing: -0.022em; }
+  h3 { font-size: clamp(1.15rem, 1.05rem + .45vw, 1.42rem); font-weight: 700; letter-spacing: -0.015em; }
+  h4 { font-size: clamp(1.02rem, .96rem + .22vw, 1.18rem); font-weight: 650; letter-spacing: -0.01em; }
+  h5 { font-size: .95rem; font-weight: 650; }
+  p { line-height: 1.65; }
+}
+
+/* Fixed On-Image Typography (immune to light/dark mode changes and base heading rules) */
+.text-on-image {
+  color: #FFFFFF !important;
+}
+
+.hero-title,
+h1.hero-title,
+.text-on-image h1,
+.text-on-image h2 {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65) !important;
+}
+
+.hero-description,
+.text-on-image p.hero-description,
+p.hero-description {
+  color: rgba(255, 255, 255, 0.92) !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65) !important;
+}
+
+.hero-badge {
+  color: #2dd4bf !important;
+  background-color: rgba(15, 23, 42, 0.75) !important;
+  border-color: rgba(45, 212, 191, 0.4) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+.hero-disclaimer {
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+.hero-btn-secondary {
+  color: #FFFFFF !important;
+  background-color: rgba(15, 23, 42, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+}
+.hero-btn-secondary:hover {
+  background-color: rgba(30, 41, 59, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+  color: #FFFFFF !important;
+}
+
+/* IMPORTANT — read before adding any new class here: every custom class
+   that ever appears in JSX alongside a Tailwind utility (spacing, color,
+   sizing, etc.) MUST live inside `@layer components` (or `@layer base` for
+   element selectors). Tailwind v4 ships its own rules inside CSS cascade
+   layers; anything left unlayered automatically beats every layered rule
+   outright, regardless of source order or specificity. Two real bugs came
+   from this before it was understood:
+     1. `.input { padding: ... }` was cancelling `pl-9`/`pr-10` utility
+        classes used to make room for input icons, so icons overlapped text.
+     2. `.container-x { padding: 0 1.25rem }` was silently zeroing out any
+        `py-*`/`p-*` utility applied to the same element (shorthand
+        `padding` sets all four sides), which is why the hero's `py-24
+        md:py-36` collapsed to 0 and its bottom stat-card row looked cut
+        off flush against the section below.
+   Only pseudo-class overrides that must *always* win regardless of what
+   utility is applied (like the dark-mode safety net and the autofill fix
+   near the bottom of this file) are intentionally left unlayered. */
+@layer components {
+  .bg-app { background: var(--bg); }
+  .bg-surface { background: var(--surface); }
+  .text-app { color: var(--text); }
+  .text-muted { color: var(--muted); }
+  .border-app { border-color: var(--border); }
+
+  .gradient-hero {
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(111,121,209,.32), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(52,211,153,.28), transparent 60%),
+      linear-gradient(180deg, #202451 0%, #2c3270 55%, #3a4396 100%);
+  }
+  .gradient-safety {
+    background: linear-gradient(150deg, #202451 0%, #2c3270 45%, #3a4396 100%);
+  }
+  .gradient-gold {
+    background: linear-gradient(135deg, #ffd166 0%, #f5a623 100%);
+  }
+  .gradient-aurora {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 45%, #4338ca 100%);
+  }
+  .gradient-data {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  }
+  .gradient-process {
+    background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
+  }
+  .gradient-warm {
+    background: linear-gradient(135deg, #7c2d12 0%, #9a3412 50%, #c2410c 100%);
+  }
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-glow);
+  }
+  .glass-strong {
+    background: var(--glass-strong);
+    backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid var(--border);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar { width:6px; height:6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+
+  .section { padding: 3rem 0; }
+  @media (min-width: 768px) { .section { padding: 4.5rem 0; } }
+  .container-x { max-width: 1440px; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
+  @media (min-width: 640px) { .container-x { padding-left: 2rem; padding-right: 2rem; } }
+  @media (min-width: 1024px) { .container-x { padding-left: 3rem; padding-right: 3rem; } }
+
+  .text-shadow-hero {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.875rem;
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    padding:.65rem 1.15rem; border-radius:.65rem; font-weight:600; font-size:.875rem;
+    transition: all .2s ease; border:1px solid transparent; cursor:pointer;
+    font-family: var(--font-sans); letter-spacing: -0.005em;
+  }
+  .btn:disabled { opacity:.6; cursor:not-allowed; transform:none !important; }
+  .btn-primary { background: linear-gradient(135deg,#3a4396,#10b981); color:#fff; box-shadow: 0 8px 24px -8px rgba(58,67,150,.55); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 32px -8px rgba(58,67,150,.65); }
+  .btn-gold { background: linear-gradient(135deg,#ffd166,#f5a623); color:#3a2500; }
+  .btn-gold:hover { transform: translateY(-1px); }
+  .btn-outline { border-color: var(--border); background: transparent; color: var(--text); }
+  .btn-outline:hover { background: var(--glass); }
+  .btn-danger { background: #e11d48; color:#fff; }
+  .btn-ghost { background: transparent; color: var(--text); }
+  .btn-ghost:hover { background: var(--glass); }
+
+  .input, .select, .textarea {
+    width:100%; padding:.65rem .85rem; border-radius:.7rem;
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+    transition: border-color .15s, box-shadow .15s;
+    font-size: .9rem; font-family: var(--font-sans);
+  }
+  .input:focus, .select:focus, .textarea:focus { outline:none; border-color: transparent; box-shadow: 0 0 0 3px var(--ring); }
+  .input::placeholder, .textarea::placeholder { color: var(--muted); opacity: .75; }
+  label.field-label { font-size:.72rem; font-weight:700; color: var(--muted); margin-bottom:.4rem; display:block; text-transform: uppercase; letter-spacing:.08em; }
+
+  .badge { display:inline-flex; align-items:center; gap:.3rem; padding:.22rem .6rem; border-radius:999px; font-size:.7rem; font-weight:700; letter-spacing:.01em; }
+  .badge-critical { background: rgba(225,29,72,.12); color:#e11d48; }
+  .badge-high { background: rgba(245,158,11,.15); color:#b45309; }
+  .badge-medium { background: rgba(75,86,184,.14); color:#3a4396; }
+  .badge-low { background: rgba(107,114,128,.15); color:#4b5563; }
+  .badge-ok { background: rgba(16,185,129,.14); color:#059669; }
+  .dark .badge-critical { color:#fb7185; }
+  .dark .badge-high { color:#fbbf24; }
+  .dark .badge-medium { color:#9aa2e2; }
+  .dark .badge-low { color:#c3cadb; }
+  .dark .badge-ok { color:#5eead4; }
+
+  .chip { padding:.28rem .65rem; border-radius:999px; font-size:.7rem; font-weight:600; border:1px solid var(--border); background: var(--glass); }
+
+  /* Premium hover treatment for feature/showcase cards: a soft glow that
+     tracks the pointer, plus a fine gold-to-teal border sheen on hover. */
+  .premium-card { position: relative; overflow: hidden; }
+  .premium-card::before {
+    content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
+    background: linear-gradient(135deg, rgba(255,209,102,.55), rgba(58,67,150,0), rgba(52,211,153,.5));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0; transition: opacity .35s ease; pointer-events: none;
+  }
+  .premium-card:hover::before { opacity: 1; }
+
+  /* Infinite-scroll marquee for the "trusted by" partner strip. */
+  .marquee-track { display:flex; width:max-content; animation: marquee 26s linear infinite; }
+  .marquee-mask:hover .marquee-track { animation-play-state: paused; }
+  .marquee-mask { -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* Toggle switch used across Settings pages */
+  .switch { position:relative; display:inline-flex; width:2.75rem; height:1.6rem; flex-shrink:0; border-radius:999px; background:var(--border); border:1px solid var(--border); cursor:pointer; transition: background .2s ease; }
+  .switch[data-on="true"] { background: linear-gradient(135deg,#3a4396,#10b981); border-color: transparent; }
+  .switch .switch-dot { position:absolute; top:2px; left:2px; width:1.25rem; height:1.25rem; border-radius:999px; background:#fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); transition: transform .2s ease; }
+  .switch[data-on="true"] .switch-dot { transform: translateX(1.15rem); }
+
+  /* Coordinated table & grid alignment helpers */
+  .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-app { width: 100%; text-align: left; border-collapse: collapse; font-size: 0.85rem; }
+  .table-app th { padding: 0.75rem 1rem; font-family: var(--font-display); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .table-app td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .table-app tr:last-child td { border-bottom: none; }
+  .table-app tr:hover td { background-color: rgba(75, 86, 184, 0.03); }
+}
+
+/* Keep autofilled inputs on-theme instead of the browser's default white/
+   yellow fill, and stop Chrome animating the fill-color transition (which
+   is what makes autofilled fields flash unstyled before our colors apply).
+   This is unlayered on purpose: it must always win regardless of layer
+   order since it targets a browser pseudo-class no utility class touches. */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0px 1000px var(--surface-2) inset;
+  box-shadow: 0 0 0px 1000px var(--surface-2) inset;
+  transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
+  caret-color: var(--text);
+}
+
+
+/* Form controls & Dropdown option wording adaptation for both themes */
+select option {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator,
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.dark input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.9) brightness(1.2);
+}
+
+/* Comprehensive Theme Text Contrast Safety Net:
+   Ensure all accent wording stays crisp and visible when changing themes. */
+.dark .text-navy-500,
+.dark .text-navy-600,
+.dark .text-navy-700,
+.dark .text-navy-800,
+.dark .text-navy-900,
+.dark .\!text-navy-500,
+.dark .\!text-navy-600,
+.dark .\!text-navy-700,
+.dark .\!text-navy-800,
+.dark .\!text-navy-900 {
+  color: var(--color-navy-200) !important;
+}
+
+.dark .text-teal-600,
+.dark .text-teal-700,
+.dark .\!text-teal-600,
+.dark .\!text-teal-700 {
+  color: var(--color-teal-400) !important;
+}
+
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .\!text-amber-600,
+.dark .\!text-amber-700 {
+  color: var(--color-gold-400) !important;
+}
+
+.dark .text-slate-600,
+.dark .text-slate-700,
+.dark .text-slate-800,
+.dark .text-slate-900,
+.dark .\!text-slate-600,
+.dark .\!text-slate-700,
+.dark .\!text-slate-800,
+.dark .\!text-slate-900,
+.dark .text-gray-600,
+.dark .text-gray-700,
+.dark .text-gray-800,
+.dark .text-gray-900,
+.dark .\!text-gray-600,
+.dark .\!text-gray-700,
+.dark .\!text-gray-800,
+.dark .\!text-gray-900 {
+  color: var(--text) !important;
+}
+
+/* Recharts & SVG charts text adaptation */
+.recharts-legend-item-text {
+  color: var(--text) !important;
+}
+.recharts-text,
+.recharts-pie-label-text {
+  fill: var(--text) !important;
+}
+.recharts-cartesian-axis-tick-value {
+  fill: var(--muted) !important;
+}
+.recharts-default-tooltip {
+  background-color: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 0.75rem !important;
+}
+.recharts-tooltip-item {
+  color: var(--text) !important;
+}
+
+/* Leaflet Map Popups Theme Adaptation */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-glow) !important;
+}
+.leaflet-popup-content,
+.leaflet-popup-content * {
+  color: var(--text) !important;
+}
+.leaflet-popup-content .text-muted,
+.leaflet-popup-content .text-gray-500,
+.leaflet-popup-content .text-gray-600 {
+  color: var(--muted) !important;
+}
+
+
+
+/* Accessibility: a visible, high-contrast focus ring for every interactive
+   element reached by keyboard, and a skip link so keyboard/screen-reader
+   users can bypass the nav on every page instead of tabbing through it. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[role="switch"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: 0.5rem;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 200;
+  background: var(--color-navy-900);
+  color: #fff;
+  padding: 0.65rem 1.1rem;
+  border-radius: 0.6rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
