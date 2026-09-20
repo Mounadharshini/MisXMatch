@@ -1,5 +1,6 @@
 {
   "name": "misxmatch",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,27 +11,27 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
-    "axios": "^1.18.1",
-    "clsx": "^2.1.1",
-    "framer-motion": "^11.15.0",
-    "leaflet": "^1.9.4",
-    "lottie-react": "^2.4.0",
-    "lucide-react": "^0.575.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-dropzone": "^14.2.10",
-    "react-hook-form": "^7.80.0",
-    "react-icons": "^5.4.0",
-    "react-leaflet": "^4.2.1",
-    "react-router-dom": "^6.28.0",
-    "react-webcam": "^7.2.0",
-    "recharts": "^2.15.4",
-    "tailwindcss": "^4.2.1",
-    "@tailwindcss/vite": "^4.2.1"
+    "@hookform/resolvers": "5.4.0",
+    "@tailwindcss/vite": "4.3.2",
+    "axios": "1.18.1",
+    "clsx": "2.1.1",
+    "framer-motion": "11.18.2",
+    "leaflet": "1.9.4",
+    "lottie-react": "2.4.1",
+    "lucide-react": "0.575.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-dropzone": "14.4.1",
+    "react-hook-form": "7.80.0",
+    "react-icons": "5.7.0",
+    "react-leaflet": "4.2.1",
+    "react-router-dom": "6.30.4",
+    "react-webcam": "7.2.0",
+    "recharts": "2.15.4",
+    "tailwindcss": "4.3.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.2.0",
-    "vite": "^8.0.16"
+    "@vitejs/plugin-react": "5.2.0",
+    "vite": "8.1.3"
   }
 }
